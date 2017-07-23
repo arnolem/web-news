@@ -56,11 +56,20 @@ echo '<?xml version="1.0" encoding="utf-8"?>' . "\n";
 break;
 case 'html':
 default:
-head($group);
+head($group.' mailing list');
+echo '<nav class="secondary-nav">';
+echo ' <ul class="breadcrumbs">';
+echo '  <li class="breadcrumbs-item"><a class="breadcrumbs-item-link" href="/">PHP Mailing Lists</a></li>';
+echo '  <li class="breadcrumbs-item"><a class="breadcrumbs-item-link" href="/'.htmlspecialchars($group, ENT_QUOTES, "UTF-8").'">'.htmlspecialchars($group, ENT_QUOTES, "UTF-8").'</a></li>';
+echo ' </ul>';
+echo '</nav>';
+echo '<section class="content">';
+echo '<h1>'.htmlspecialchars($group, ENT_QUOTES, "UTF-8").'</h1>';
 navbar($group, $overview['group']['low'], $overview['group']['high'], $overview['group']['start']);
-echo '  <table class="stripped" width="100%">' . "\n";
+echo ' <div class="responsive-table">' . "\n";
+echo '  <table class="standard">' . "\n";
 echo '   <tr>' . "\n";
-echo '    <th>#</td>' . "\n";
+echo '    <th>#</th>' . "\n";
 echo '    <th>subject</th>' . "\n";
 echo '    <th>author</th>' . "\n";
 echo '    <th>date</th>' . "\n";
@@ -101,9 +110,9 @@ foreach ($overview['articles'] as $articleNumber => $details) {
 		echo "    <td><a href=\"/$group/$articleNumber\">";
 		echo format_subject($details['subject'], $charset);
 		echo "</a></td>\n";
-		echo "    <td vcard\">".format_author($details['author'], $charset)."</td>\n";
-		echo "    <td align=\"center\"><tt>" . format_date($details['date']) . "</tt></td>\n";
-		echo "    <td align=\"right\">{$details['lines']}</td>\n";
+		echo "    <td class=\"vcard\">".format_author($details['author'], $charset)."</td>\n";
+		echo "    <td class=\"align-center\"><span class='monospace mod-small'>" . format_date($details['date']) . "</span></td>\n";
+		echo "    <td class=\"align-right\">{$details['lines']}</td>\n";
 		echo "   </tr>\n";
 	}
 }
@@ -118,28 +127,30 @@ switch ($format) {
 	case 'html':
 	default:
 	echo "  </table>\n";
+	echo " </div>\n";
 	navbar($group, $overview['group']['low'], $overview['group']['high'], $overview['group']['start']);
+	echo "</section>";
 	foot();
 }
 
 function navbar($g, $f, $l, $i) {
-	echo '  <table border="0" cellpadding="2" cellspacing="2" width="100%">' . "\n";
+	echo '  <table class="standard">' . "\n";
 	echo '   <tr>' . "\n";
 	echo '    <th class="nav">';
 	if ($i > $f) {
 		$p = max($i-20,$f);
-		echo "<a href=\"/" . htmlspecialchars($g, ENT_QUOTES, "UTF-8") . "/start/$p\"><b>&laquo; previous</b></a>";
+		echo "<a href=\"/" . htmlspecialchars($g, ENT_QUOTES, "UTF-8") . "/start/$p\"><b>&laquo; <span>previous</span></b></a>";
 	} else {
 		echo "&nbsp;";
 	}
 	echo '</th>' . "\n";
 	$j = min($i + 20, $l);
 	$c = $l - $f + 1;
-	echo '    <th align="center">'.htmlspecialchars($g, ENT_QUOTES, "UTF-8")." ($i-$j of $c)</th>\n";
-	echo '    <th align="right" class="nav">';
+	echo '    <th class="align-center">'.htmlspecialchars($g, ENT_QUOTES, "UTF-8")." ($i-$j of $c)</th>\n";
+	echo '    <th class="nav align-right">';
 	if ($i+20 <= $l) {
 		$n = min($i + 20, $l - 19);
-		echo "<a href=\"/" . htmlspecialchars($g, ENT_QUOTES, "UTF-8") . "/start/$n\"><b>next &raquo;</b></a>";
+		echo "<a href=\"/" . htmlspecialchars($g, ENT_QUOTES, "UTF-8") . "/start/$n\"><b><span>next</span> &raquo;</b></a>";
 	}
 	else {
 		echo "&nbsp;";
